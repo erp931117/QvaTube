@@ -1,4 +1,4 @@
-name: .NET MAUI (Windows)
+name: .NET MAUI (Android)
 
 on:
   push:
@@ -19,9 +19,13 @@ jobs:
         dotnet-version: 6.0.x
     - name: Install MAUI workload
       run: dotnet workload install maui
-    - name: Build
-      run: dotnet publish src/QvaTube.sln -c Release -f:net6.0-windows10.0.19041.0 /p:GenerateAppxPackageOnBuild=true /p:AppxPackageSigningEnabled=false 
+    - name: Restore Dependencies
+      run: dotnet restore src/QvaTube.sln
+    - name: Build Maui Android
+      run: dotnet build src/QvaTube.sln -c Release -f net6.0-android --no-restore
     - name: Upload Build Artifacts
       uses: actions/upload-artifact@v3.1.0
       with:
-        path: .\**\AppPackages\**\*.*
+       path: |
+          ./**/*.aab
+          ./**/*.apk
